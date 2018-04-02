@@ -3,8 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 layer_num = 1
-W1 = None
-W2 = None
 def build_layer(X, neuron_num = 1000):
     """
     part 1.1.1
@@ -15,20 +13,15 @@ def build_layer(X, neuron_num = 1000):
              for output layer: i'th row is i'th image's probabilities to be each of 10 classes
     """
     global layer_num
-    W = tf.get_variable(name="W" + str(layer_num), shape=[X.shape[1], neuron_num], initializer=tf.contrib.layers.xavier_initializer())
+    with tf.variable_scope("W"):
+        W = tf.get_variable(name="W" + str(layer_num), shape=[X.shape[1], neuron_num], initializer=tf.contrib.layers.xavier_initializer())
     b = tf.Variable(tf.zeros([1, neuron_num]), name="bias")
     Sum = tf.matmul(X, W) + b
-    if layer_num == 1:
-        global W1
-        W1 = W
-    elif layer_num == 2:
-        global W2
-        W2 = W
-    layer_num += 1
+    layer_num += 1 # give each W a unique name
     return Sum
 
 
-def build_graph(reg = 0.1, learning_rate = 0.005):
+def build_graph(reg = 3*10**-4, learning_rate = 0.005):
     """
     :param reg: regularization strength
     :param learning_rate: learning rate
@@ -45,7 +38,11 @@ def build_graph(reg = 0.1, learning_rate = 0.005):
     # layer 2
     S2 = build_layer(X1, neuron_num=10)
     entropy = tf.nn.softmax_cross_entropy_with_logits(labels=Y_onehot, logits=S2)
-    loss = 0.5 * tf.reduce_mean(entropy)
+
+    with tf.variable_scope("W", reuse=True):
+        W1 = tf.get_variable("W1")
+        W2 = tf.get_variable("W2")
+    loss = 0.5 * tf.reduce_mean(entropy) + reg * (tf.nn.l2_loss(W1) + tf.nn.l2_loss(W2))
     optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
 
     return X0, Y, S2, loss, optimizer
@@ -107,7 +104,7 @@ def train_no_early_stopping():
     test_data = tf.cast(test_data, tf.float32)
 
     batch_size = 500
-    num_iterations = 900
+    num_iterations = 9000
     num_train = train_data.shape[0]
     num_batches = num_train // batch_size
     num_epochs = num_iterations // num_batches
@@ -142,14 +139,9 @@ def train_no_early_stopping():
                 })
             # print("training loss:", train_loss)
             train_loss_list.append(train_loss)
-
-            # W1 = tf.get_default_graph().get_tensor_by_name("W1")
-            # W2 = tf.get_default_graph().get_tensor_by_name("W2")
-            # W1 = tf.global_variables()["W1"]
-            # W2 = tf.global_variables()["W2"]
-            # tf.global_variables()
-            # W1 = tf.Graph.get_tensor_by_name(name="W1")
-            # W2 = tf.Graph.get_tensor_by_name(name="W2")
+            with tf.variable_scope("W", reuse=True):
+                W1 = tf.get_variable("W1")
+                W2 = tf.get_variable("W2")
 
             # compute classficiation errors
             train_preds = tf.nn.softmax(Output)
