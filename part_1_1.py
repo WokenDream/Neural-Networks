@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 layer_num = 1
+W1 = None
+W2 = None
 def build_layer(X, neuron_num = 1000):
     """
     part 1.1.1
@@ -16,6 +18,12 @@ def build_layer(X, neuron_num = 1000):
     W = tf.get_variable(name="W" + str(layer_num), shape=[X.shape[1], neuron_num], initializer=tf.contrib.layers.xavier_initializer())
     b = tf.Variable(tf.zeros([1, neuron_num]), name="bias")
     Sum = tf.matmul(X, W) + b
+    if layer_num == 1:
+        global W1
+        W1 = W
+    elif layer_num == 2:
+        global W2
+        W2 = W
     layer_num += 1
     return Sum
 
@@ -93,6 +101,11 @@ def tune_learning_rate():
 
 def train_no_early_stopping():
     train_data, train_target, valid_data, valid_target, test_data, test_target = load_data()
+    valid_target_onehot = tf.one_hot(valid_target, 10)
+    test_target_onehot = tf.one_hot(test_target, 10)
+    valid_data = tf.cast(valid_data, tf.float32)
+    test_data = tf.cast(test_data, tf.float32)
+
     batch_size = 500
     num_iterations = 900
     num_train = train_data.shape[0]
@@ -106,7 +119,7 @@ def train_no_early_stopping():
     X0, Y, S2, loss, optimizer = build_graph()
     init = tf.global_variables_initializer()
     train_loss_list = []
-    training_error_list = []
+    train_error_list = []
     valid_error_list = []
     test_error_list = []
 
@@ -127,8 +140,16 @@ def train_no_early_stopping():
                     X0: batch_X0,
                     Y: batch_Y
                 })
-            print("training loss:", train_loss)
+            # print("training loss:", train_loss)
             train_loss_list.append(train_loss)
+
+            # W1 = tf.get_default_graph().get_tensor_by_name("W1")
+            # W2 = tf.get_default_graph().get_tensor_by_name("W2")
+            # W1 = tf.global_variables()["W1"]
+            # W2 = tf.global_variables()["W2"]
+            # tf.global_variables()
+            # W1 = tf.Graph.get_tensor_by_name(name="W1")
+            # W2 = tf.Graph.get_tensor_by_name(name="W2")
 
             # compute classficiation errors
             train_preds = tf.nn.softmax(Output)
@@ -136,7 +157,39 @@ def train_no_early_stopping():
             correct_train_preds = tf.equal(tf.argmax(train_preds, 1), tf.argmax(batch_Y_onehot, 1))
             train_error = 1 - tf.reduce_mean(tf.cast(correct_train_preds, tf.float32))
 
-            print("classficiation error:", train_error.eval())
+            X1 = tf.nn.relu(tf.matmul(valid_data, W1))
+            valid_preds = tf.nn.softmax(tf.matmul(X1, W2))
+            correct_valid_preds = tf.equal(tf.argmax(valid_preds, 1), tf.argmax(valid_target_onehot, 1))
+            valid_error = 1 - tf.reduce_mean(tf.cast(correct_valid_preds, tf.float32))
+
+            X1 = tf.nn.relu(tf.matmul(test_data, W1))
+            test_preds = tf.nn.softmax(tf.matmul(X1, W2))
+            correct_test_preds = tf.equal(tf.argmax(test_preds, 1), tf.argmax(test_target_onehot, 1))
+            test_error = 1 - tf.reduce_mean(tf.cast(correct_test_preds, tf.float32))
+
+            train_error_list.append(train_error.eval())
+            valid_error_list.append(valid_error.eval())
+            test_error_list.append(test_error.eval())
+            # print("training classficiation error:", train_error.eval())
+            # print("valid classficiation error:", valid_error.eval())
+            # print("test classficiation error:", test_error.eval())
+        plt.subplot(2, 1, 1)
+        plt.plot(np.arange(num_epochs), train_loss_list)
+        plt.xlabel("epoch #")
+        plt.ylabel("entropy loss")
+        plt.title("entropy loss vs epoch #")
+        plt.subplot(2, 1, 2)
+        plt.plot(np.arange(num_epochs), train_error_list)
+        plt.plot(np.arange(num_epochs), valid_error_list)
+        plt.plot(np.arange(num_epochs), test_error_list)
+        plt.xlabel("epoch #")
+        plt.ylabel("classification error")
+        plt.title("classification error vs epoch #")
+        plt.legend(["training", "validation", "test"])
+        plt.tight_layout()
+        plt.savefig("part_1_1_2", dpi=400)
+        plt.show()
+        plt.gcf().clear()
 
 
 
