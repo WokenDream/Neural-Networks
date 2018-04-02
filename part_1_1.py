@@ -137,7 +137,8 @@ def train_no_early_stopping():
                     X0: batch_X0,
                     Y: batch_Y
                 })
-            # print("training loss:", train_loss)
+            if epoch % 10 == 0:
+                print("training loss:", train_loss)
             train_loss_list.append(train_loss)
             with tf.variable_scope("W", reuse=True):
                 W1 = tf.get_variable("W1")
