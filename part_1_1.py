@@ -21,7 +21,7 @@ def build_layer(X, neuron_num = 1000):
     return Sum
 
 
-def build_graph(reg = 3*10**-4, learning_rate = 0.005):
+def build_2_layer_NN(hidden_units_num = 1000, reg =3 * 10 ** -4, learning_rate = 0.005):
     """
     :param reg: regularization strength
     :param learning_rate: learning rate
@@ -32,7 +32,7 @@ def build_graph(reg = 3*10**-4, learning_rate = 0.005):
     Y_onehot = tf.one_hot(Y, 10)
 
     # layer 1
-    S1 = build_layer(X0)
+    S1 = build_layer(X0, neuron_num=hidden_units_num)
     X1 = tf.nn.relu(S1)
 
     # layer 2
@@ -40,8 +40,8 @@ def build_graph(reg = 3*10**-4, learning_rate = 0.005):
     entropy = tf.nn.softmax_cross_entropy_with_logits(labels=Y_onehot, logits=S2)
 
     with tf.variable_scope("W", reuse=True):
-        W1 = tf.get_variable("W1")
-        W2 = tf.get_variable("W2")
+        W1 = tf.get_variable("W" + str(layer_num - 2))
+        W2 = tf.get_variable("W" + str(layer_num - 1))
     loss = 0.5 * tf.reduce_mean(entropy) + reg * (tf.nn.l2_loss(W1) + tf.nn.l2_loss(W2))
     optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
 
@@ -64,7 +64,7 @@ def tune_learning_rate():
 
     for lr in learning_rates:
         print("learning rate:", lr)
-        X0, Y, S2, loss, optimizer = build_graph(learning_rate=lr)
+        X0, Y, S2, loss, optimizer = build_2_layer_NN(learning_rate=lr)
         init = tf.global_variables_initializer()
         train_loss_list = []
 
@@ -104,7 +104,7 @@ def train_no_early_stopping():
     test_data = tf.cast(test_data, tf.float32)
 
     batch_size = 500
-    num_iterations = 9000
+    num_iterations = 4500
     num_train = train_data.shape[0]
     num_batches = num_train // batch_size
     num_epochs = num_iterations // num_batches
@@ -113,7 +113,7 @@ def train_no_early_stopping():
     print("number of epochs:", num_epochs, "; iteration left-overs:", num_iterations_leftover)
     print("number of iterations:", num_iterations)
 
-    X0, Y, S2, loss, optimizer = build_graph()
+    X0, Y, S2, loss, optimizer = build_2_layer_NN()
     init = tf.global_variables_initializer()
     train_loss_list = []
     train_error_list = []
@@ -166,6 +166,11 @@ def train_no_early_stopping():
             # print("training classficiation error:", train_error.eval())
             # print("valid classficiation error:", valid_error.eval())
             # print("test classficiation error:", test_error.eval())
+
+        print("final training loss:", train_loss_list[-1])
+        print("final training classification error:", train_error_list[-1])
+        print("final validation classification error:", valid_error_list[-1])
+        print("final test classification error:", test_error_list[-1])
         plt.subplot(2, 1, 1)
         plt.plot(np.arange(num_epochs), train_loss_list)
         plt.xlabel("epoch #")
