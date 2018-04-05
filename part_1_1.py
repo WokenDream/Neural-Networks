@@ -29,8 +29,10 @@ def compute_2_layer_accuracy(data, one_hot_labels, W1, W2):
     error = 1 - tf.reduce_mean(tf.cast(correct_preds, tf.float32))
     return error
 
-def build_2_layer_NN(hidden_units_num = 1000, reg =3e-4, learning_rate = 0.001):
+
+def build_2_layer_NN(hidden_units_num = 1000, reg =3e-4, learning_rate = 0.001, dropout = False):
     """
+    :param hidden_units_num: number of neurons in each hidden layer
     :param reg: regularization strength
     :param learning_rate: learning rate
     :return: a 2 layer fully connected neural network
@@ -42,6 +44,9 @@ def build_2_layer_NN(hidden_units_num = 1000, reg =3e-4, learning_rate = 0.001):
     # layer 1
     S1 = build_layer(X0, neuron_num=hidden_units_num)
     X1 = tf.nn.relu(S1)
+    if dropout:
+        print("applying dropout")
+        X1 = tf.nn.dropout(X1, 0.5)
 
     # layer 2
     S2 = build_layer(X1, neuron_num=10)
@@ -89,7 +94,7 @@ def tune_learning_rate():
                 for j in range(num_batches):
                     batch_X0 = temp_train_data[j * batch_size: (j + 1) * batch_size]
                     batch_Y = temp_train_targets[j * batch_size: (j + 1) * batch_size]
-                    _, train_error, Output = sess.run([optimizer, loss, S2], feed_dict={
+                    _, train_error = sess.run([optimizer, loss], feed_dict={
                         X0: batch_X0,
                         Y: batch_Y
                     })
@@ -223,5 +228,5 @@ def load_data():
     return train_data, trainTarget, valid_data, validTarget, test_data, testTarget
 
 if __name__ == "__main__":
-    # tune_learning_rate()
-    train_no_early_stopping()
+    tune_learning_rate()
+    # train_no_early_stopping()

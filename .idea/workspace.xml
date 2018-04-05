@@ -4,12 +4,6 @@
     <list default="true" id="897e1d83-f9b8-47b4-80c9-25293033397c" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/part_1_1.py" afterPath="$PROJECT_DIR$/part_1_1.py" />
-      <change beforePath="$PROJECT_DIR$/part_1_1_2.png" afterPath="$PROJECT_DIR$/part_1_1_2.png" />
-      <change beforePath="$PROJECT_DIR$/part_1_1_2_old.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/part_1_2.py" afterPath="$PROJECT_DIR$/part_1_2.py" />
-      <change beforePath="$PROJECT_DIR$/part_1_2_1.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/part_1_2_1_100.png" afterPath="$PROJECT_DIR$/part_1_2_1_100.png" />
-      <change beforePath="$PROJECT_DIR$/part_1_2_1_500.png" afterPath="$PROJECT_DIR$/part_1_2_1_500.png" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,11 +17,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="part_1_1.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="part_1_1.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/part_1_1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="172">
-              <caret line="24" column="4" lean-forward="false" selection-start-line="24" selection-start-column="4" selection-end-line="24" selection-end-column="4" />
+            <state relative-caret-position="171">
+              <caret line="96" column="34" lean-forward="false" selection-start-line="96" selection-start-column="23" selection-end-line="96" selection-end-column="34" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -35,11 +29,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="part_1_2.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="part_1_3.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/part_1_3.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="69">
+              <caret line="72" column="43" lean-forward="false" selection-start-line="72" selection-start-column="43" selection-end-line="72" selection-end-column="43" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="part_1_2.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/part_1_2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="151">
-              <caret line="256" column="50" lean-forward="true" selection-start-line="256" selection-start-column="50" selection-end-line="256" selection-end-column="50" />
+            <state relative-caret-position="-446">
+              <caret line="160" column="0" lean-forward="true" selection-start-line="160" selection-start-column="0" selection-end-line="160" selection-end-column="0" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -74,8 +80,8 @@
       <find>print</find>
       <find>train_loss</find>
       <find>legend</find>
-      <find>savefi</find>
       <find>train_error</find>
+      <find>savefi</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -84,8 +90,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/part_1_1.py" />
         <option value="$PROJECT_DIR$/part_1_2.py" />
+        <option value="$PROJECT_DIR$/part_1_3.py" />
+        <option value="$PROJECT_DIR$/part_1_1.py" />
       </list>
     </option>
   </component>
@@ -136,7 +143,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.part_1_2">
+  <component name="RunManager" selected="Python.part_1_3">
     <configuration name="part_1_1" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -173,14 +180,34 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <list size="2">
+    <configuration name="part_1_3" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="a3" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/part_1_3.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Python.part_1_1" />
       <item index="1" class="java.lang.String" itemvalue="Python.part_1_2" />
+      <item index="2" class="java.lang.String" itemvalue="Python.part_1_3" />
     </list>
     <recent_temporary>
-      <list size="2">
-        <item index="0" class="java.lang.String" itemvalue="Python.part_1_2" />
+      <list size="3">
+        <item index="0" class="java.lang.String" itemvalue="Python.part_1_3" />
         <item index="1" class="java.lang.String" itemvalue="Python.part_1_1" />
+        <item index="2" class="java.lang.String" itemvalue="Python.part_1_2" />
       </list>
     </recent_temporary>
   </component>
@@ -216,10 +243,10 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15250199" sideWeight="0.48623854" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32854864" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32695374" sideWeight="0.5059571" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3276923" sideWeight="0.4921875" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14513557" sideWeight="0.4921875" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32854864" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32854864" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37799042" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33652312" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32695374" sideWeight="0.4940429" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15" sideWeight="0.51376146" order="2" side_tool="true" content_ui="tabs" />
@@ -399,20 +426,46 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/part_1_1.py">
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/tensorflow/python/ops/gen_nn_ops.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
-          <caret line="24" column="4" lean-forward="false" selection-start-line="24" selection-start-column="4" selection-end-line="24" selection-end-column="4" />
+        <state relative-caret-position="139">
+          <caret line="2261" column="4" lean-forward="false" selection-start-line="2261" selection-start-column="4" selection-end-line="2261" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/tensorflow/python/ops/nn_ops.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="155">
+          <caret line="1860" column="4" lean-forward="false" selection-start-line="1860" selection-start-column="4" selection-end-line="1860" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/part_1_2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-446">
+          <caret line="160" column="0" lean-forward="true" selection-start-line="160" selection-start-column="0" selection-end-line="160" selection-end-column="0" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/part_1_2.py">
+    <entry file="file://$PROJECT_DIR$/part_1_3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="151">
-          <caret line="256" column="50" lean-forward="true" selection-start-line="256" selection-start-column="50" selection-end-line="256" selection-end-column="50" />
+        <state relative-caret-position="69">
+          <caret line="72" column="43" lean-forward="false" selection-start-line="72" selection-start-column="43" selection-end-line="72" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/part_1_1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="96" column="34" lean-forward="false" selection-start-line="96" selection-start-column="23" selection-end-line="96" selection-end-column="34" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>

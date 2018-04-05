@@ -1,0 +1,4 @@
+
+2018-04-05 03:07:43
+final training classification error: 0.034
+final validation classification error: 0.064
