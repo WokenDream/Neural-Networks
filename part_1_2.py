@@ -68,6 +68,9 @@ def tune_num_of_hidden_units():
 
             print("final validation classification error:", valid_error_list[-1])
 
+            with open("part_1_2_1.txt", "a") as file:
+                file.write("\n" + strftime("%Y-%m-%d %H:%M:%S", gmtime()) + "\n")
+
             # save model
             for best in best_models:
                 with open("part_1_2_1.txt", "a") as file:
@@ -77,7 +80,6 @@ def tune_num_of_hidden_units():
                 np.save(str(hidden_num) + "_best_W2_at" + str(best[0]) + ".npy", best[-1][1])
 
             with open("part_1_2_1.txt", "a") as file:
-                file.write("\n" + strftime("%Y-%m-%d %H:%M:%S", gmtime()) + "\n")
                 file.write(str(hidden_num) + "final validation classification error: " + str(valid_error_list[-1]) + "\n")
 
             plt.plot(valid_error_list)
