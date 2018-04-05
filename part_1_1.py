@@ -85,12 +85,12 @@ def tune_learning_rate():
             sess.run(init)
 
             # sample epoch 0
-            train_error = sess.run(loss, feed_dict={
+            train_loss = sess.run(loss, feed_dict={
                 X0: train_data[0:batch_size],
                 Y: train_target[0:batch_size]
             })
-            print("initial training loss:", train_error)
-            train_loss_list.append(train_error)
+            print("initial training loss:", train_loss)
+            train_loss_list.append(train_loss)
 
             shuffled_inds = np.arange(num_train)
 
@@ -103,13 +103,13 @@ def tune_learning_rate():
                 for j in range(num_batches):
                     batch_X0 = temp_train_data[j * batch_size: (j + 1) * batch_size]
                     batch_Y = temp_train_targets[j * batch_size: (j + 1) * batch_size]
-                    _, train_error = sess.run([optimizer, loss], feed_dict={
+                    _, train_loss = sess.run([optimizer, loss], feed_dict={
                         X0: batch_X0,
                         Y: batch_Y
                     })
-                train_loss_list.append(train_error)
+                train_loss_list.append(train_loss)
                 if epoch % 10 == 0:
-                    print("training loss:", train_error)
+                    print("training loss:", train_loss)
 
         plt.plot(train_loss_list)
     plt.legend(['0.005', '0.001', '0.01'])

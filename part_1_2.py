@@ -219,8 +219,20 @@ def train_3_layer_NN():
         plt.savefig("part_1_2_2_valid_train", dpi=400)
 
 
-def compare_with_2_layer():
-    # TODO: add epoch 0 to plot
+def compute_test_errors(test_data, test_target_onehot):
+    with tf.variable_scope("W", reuse=True):
+        W1_3 = tf.get_variable("W" + str(p11.layer_num - 5))
+        W2_3 = tf.get_variable("W" + str(p11.layer_num - 4))
+        W3_3 = tf.get_variable("W" + str(p11.layer_num - 3))
+        W1_2 = tf.get_variable("W" + str(p11.layer_num - 2))
+        W2_2 = tf.get_variable("W" + str(p11.layer_num - 1))
+    test_error_3 = compute_3_layer_error(test_data, test_target_onehot, W1_3, W2_3, W3_3).eval()
+    test_error_2 = p11.compute_2_layer_error(test_data, test_target_onehot, W1_2, W2_2).eval()
+
+    return test_error_3, test_error_2
+
+
+def compare_NNs():
     train_data, train_target, valid_data, valid_target, test_data, test_target = p11.load_data()
     test_data = tf.cast(test_data, tf.float32)
     test_target_onehot = tf.one_hot(test_target, 10)
@@ -242,9 +254,19 @@ def compare_with_2_layer():
     test_error_list_3 = []
     test_error_list_2 = []
 
+    best_error_3 = 100000
+    best_error_2 = 100000
+    best_errors_3 = []
+    best_errors_2 = []
     with tf.Session() as sess:
         sess.run(init)
         shuffled_inds = np.arange(num_train)
+
+        test_error_3, test_error_2 = compute_test_errors(test_data, test_target_onehot)
+        test_error_list_3.append(test_error_3)
+        test_error_list_2.append(test_error_2)
+        print("3 layer initial test error:", test_error_3)
+        print("2 layer initial test error:", test_error_2)
 
         for epoch in range(num_epochs):
             np.random.shuffle(shuffled_inds)
@@ -261,29 +283,38 @@ def compare_with_2_layer():
                     Y_2: batch_Y
                 })
 
-            with tf.variable_scope("W", reuse=True):
-                W1_3 = tf.get_variable("W" + str(p11.layer_num - 5))
-                W2_3 = tf.get_variable("W" + str(p11.layer_num - 4))
-                W3_3 = tf.get_variable("W" + str(p11.layer_num - 3))
-                W1_2 = tf.get_variable("W" + str(p11.layer_num - 2))
-                W2_2 = tf.get_variable("W" + str(p11.layer_num - 1))
-            test_error_3 = compute_3_layer_error(test_data, test_target_onehot, W1_3, W2_3, W3_3).eval()
-            test_error_2 = p11.compute_2_layer_error(test_data, test_target_onehot, W1_2, W2_2).eval()
+            test_error_3, test_error_2 = compute_test_errors(test_data, test_target_onehot)
+            test_error_list_3.append(test_error_3)
+            test_error_list_2.append(test_error_2)
+
+            if test_error_3 < best_error_3:
+                best_errors_3.clear()
+                best_errors_3.append((epoch, test_error_3))
+                best_error_3 = test_error_3
+            elif test_error_3 == best_error_3:
+                best_errors_3.append((epoch, test_error_3))
+
+            if test_error_2 < best_error_2:
+                best_errors_2.clear()
+                best_errors_2.append((epoch, test_error_2))
+                best_error_2 = test_error_2
+            elif test_error_2 == best_error_2:
+                best_errors_2.append((epoch, test_error_2))
 
             if epoch % 10 == 0:
                 print("3 layer test error:", test_error_3)
                 print("2 layer test error:", test_error_2)
 
-            test_error_list_3.append(test_error_3)
-            test_error_list_2.append(test_error_2)
-
         with open("part_1_2_2.txt", "a") as file:
             file.write("\n" + strftime("%Y-%m-%d %H:%M:%S", gmtime()) + "\n")
             file.write("3 layer final test classification error: " + str(test_error_list_3[-1]) + "\n")
             file.write("2 layer final test classification error: " + str(test_error_list_2[-1]) + "\n")
+            file.write("3 layer best test classification error: " + str(best_errors_3) + "\n")
+            file.write("2 layer best test classification error: " + str(best_errors_2) + "\n")
 
-        plt.plot(np.arange(num_epochs), test_error_list_3)
-        plt.plot(np.arange(num_epochs), test_error_list_2)
+
+        plt.plot(test_error_list_3)
+        plt.plot(test_error_list_2)
         plt.legend(['3-layer NN', '2-layer NN'])
         plt.title("test classification error vs epoch #")
         plt.xlabel('epoch number')
@@ -291,13 +322,7 @@ def compare_with_2_layer():
         plt.savefig("part_1_2_2_test", dpi=400)
 
 
-
-
-
-
-
-
 if __name__ == "__main__":
-    tune_num_of_hidden_units()
+    # tune_num_of_hidden_units()
     # train_3_layer_NN()
-    # compare_with_2_layer()
+    compare_NNs()

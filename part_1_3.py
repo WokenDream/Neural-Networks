@@ -4,6 +4,26 @@ import matplotlib.pyplot as plt
 from time import gmtime, strftime
 import part_1_1 as p11
 
+
+def compute_errors(sess, X0, S2, batch_X0, batch_Y, valid_data, valid_target_onehot):
+    with tf.variable_scope("W", reuse=True):
+        W1 = tf.get_variable("W1")
+        W2 = tf.get_variable("W2")
+
+    Output = sess.run(S2, feed_dict={
+        X0: batch_X0
+    })
+    # compute training error
+    train_preds = tf.nn.softmax(Output)
+    batch_Y_onehot = tf.one_hot(batch_Y, 10)
+    correct_train_preds = tf.equal(tf.argmax(train_preds, 1), tf.argmax(batch_Y_onehot, 1))
+    train_error = 1 - tf.reduce_mean(tf.cast(correct_train_preds, tf.float32))
+
+    # compute validation error
+    valid_error = p11.compute_2_layer_error(valid_data, valid_target_onehot, W1, W2)
+
+    return train_error.eval(), valid_error.eval()
+
 def train_dropout():
     train_data, train_target, valid_data, valid_target, test_data, test_target = p11.load_data()
     valid_data = tf.cast(valid_data, tf.float32)
@@ -30,6 +50,16 @@ def train_dropout():
         sess.run(init)
         shuffled_inds = np.arange(num_train)
 
+        batch_X0 = train_data[0:batch_size]
+        batch_Y = train_target[0:batch_size]
+        train_error, valid_error = compute_errors(sess, X0, S2, batch_X0, batch_Y, valid_data, valid_target_onehot)
+        train_error_list.append(train_error)
+        valid_error_list.append(valid_error)
+        print("initial train classification error:", train_error)
+        print("initial valid classification error:", valid_error)
+
+        best_valid_errors = []
+        best_valid_error = 100000
         for epoch in range(num_epochs):
 
             np.random.shuffle(shuffled_inds)
@@ -39,30 +69,26 @@ def train_dropout():
             for j in range(num_batches):
                 batch_X0 = temp_train_data[j * batch_size: (j + 1) * batch_size]
                 batch_Y = temp_train_targets[j * batch_size: (j + 1) * batch_size]
-                _, Output = sess.run([optimizer, S2], feed_dict={
+                sess.run(optimizer, feed_dict={
                     X0: batch_X0,
                     Y: batch_Y
                 })
+                
+            train_error, valid_error = compute_errors(sess, X0, S2, batch_X0, batch_Y, valid_data, valid_target_onehot)
 
-            with tf.variable_scope("W", reuse=True):
-                W1 = tf.get_variable("W1")
-                W2 = tf.get_variable("W2")
+            train_error_list.append(train_error)
+            valid_error_list.append(valid_error)
 
-            # compute training error
-            train_preds = tf.nn.softmax(Output)
-            batch_Y_onehot = tf.one_hot(batch_Y, 10)
-            correct_train_preds = tf.equal(tf.argmax(train_preds, 1), tf.argmax(batch_Y_onehot, 1))
-            train_error = 1 - tf.reduce_mean(tf.cast(correct_train_preds, tf.float32))
-
-            # compute validation error
-            valid_error = p11.compute_2_layer_error(valid_data, valid_target_onehot, W1, W2)
-
-            train_error_list.append(train_error.eval())
-            valid_error_list.append(valid_error.eval())
+            if valid_error < best_valid_error:
+                best_valid_errors.clear()
+                best_valid_errors.append((epoch, valid_error))
+                best_valid_error = valid_error
+            elif valid_error == best_valid_error:
+                best_valid_errors.append((epoch, valid_error))
 
             if epoch % 10 == 0:
-                print("training classficiation error:", train_error.eval())
-                print("valid classficiation error:", valid_error.eval())
+                print("training classification error:", train_error)
+                print("valid classification error:", valid_error)
 
         print("final training classification error:", train_error_list[-1])
         print("final validation classification error:", valid_error_list[-1])
@@ -71,9 +97,10 @@ def train_dropout():
             file.write("\n" + strftime("%Y-%m-%d %H:%M:%S", gmtime()) + "\n")
             file.write("final training classification error: " + str(train_error_list[-1]) + "\n")
             file.write("final validation classification error: " + str(valid_error_list[-1]) + "\n")
+            file.write("best validation classification error: " + str(best_valid_errors) + "\n")
 
-        plt.plot(np.arange(num_epochs), train_error_list)
-        plt.plot(np.arange(num_epochs), valid_error_list)
+        plt.plot(train_error_list)
+        plt.plot(valid_error_list)
         plt.xlabel("epoch #")
         plt.ylabel("classification error")
         plt.title("classification error vs epoch #")
