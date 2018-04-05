@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
+from time import gmtime, strftime
 
 layer_num = 1
 def build_layer(X, neuron_num = 1000):
@@ -21,7 +22,14 @@ def build_layer(X, neuron_num = 1000):
     return Sum
 
 
-def build_2_layer_NN(hidden_units_num = 1000, reg =3 * 10 ** -4, learning_rate = 0.005):
+def compute_2_layer_accuracy(data, one_hot_labels, W1, W2):
+    X1 = tf.nn.relu(tf.matmul(data, W1))
+    preds = tf.nn.softmax(tf.matmul(X1, W2))
+    correct_preds = tf.equal(tf.argmax(preds, 1), tf.argmax(one_hot_labels, 1))
+    error = 1 - tf.reduce_mean(tf.cast(correct_preds, tf.float32))
+    return error
+
+def build_2_layer_NN(hidden_units_num = 1000, reg =3e-4, learning_rate = 0.001):
     """
     :param reg: regularization strength
     :param learning_rate: learning rate
@@ -52,7 +60,7 @@ def tune_learning_rate():
     train_data, train_target, valid_data, valid_target, test_data, test_target = load_data()
 
     batch_size = 500
-    num_iterations = 900
+    num_iterations = 1800
     num_train = train_data.shape[0]
     num_batches = num_train // batch_size
     num_epochs = num_iterations // num_batches
@@ -85,8 +93,9 @@ def tune_learning_rate():
                         X0: batch_X0,
                         Y: batch_Y
                     })
-                print(train_error)
                 train_loss_list.append(train_error)
+                if epoch % 10 == 0:
+                    print("training loss:", train_error)
 
         plt.plot(np.arange(num_epochs), train_loss_list)
     plt.legend(['0.005', '0.001', '0.01'])
@@ -137,8 +146,6 @@ def train_no_early_stopping():
                     X0: batch_X0,
                     Y: batch_Y
                 })
-            if epoch % 10 == 0:
-                print("training loss:", train_loss)
             train_loss_list.append(train_loss)
             with tf.variable_scope("W", reuse=True):
                 W1 = tf.get_variable("W1")
@@ -150,27 +157,29 @@ def train_no_early_stopping():
             correct_train_preds = tf.equal(tf.argmax(train_preds, 1), tf.argmax(batch_Y_onehot, 1))
             train_error = 1 - tf.reduce_mean(tf.cast(correct_train_preds, tf.float32))
 
-            X1 = tf.nn.relu(tf.matmul(valid_data, W1))
-            valid_preds = tf.nn.softmax(tf.matmul(X1, W2))
-            correct_valid_preds = tf.equal(tf.argmax(valid_preds, 1), tf.argmax(valid_target_onehot, 1))
-            valid_error = 1 - tf.reduce_mean(tf.cast(correct_valid_preds, tf.float32))
-
-            X1 = tf.nn.relu(tf.matmul(test_data, W1))
-            test_preds = tf.nn.softmax(tf.matmul(X1, W2))
-            correct_test_preds = tf.equal(tf.argmax(test_preds, 1), tf.argmax(test_target_onehot, 1))
-            test_error = 1 - tf.reduce_mean(tf.cast(correct_test_preds, tf.float32))
+            valid_error = compute_2_layer_accuracy(valid_data, valid_target_onehot, W1, W2)
+            test_error = compute_2_layer_accuracy(test_data, test_target_onehot, W1, W2)
 
             train_error_list.append(train_error.eval())
             valid_error_list.append(valid_error.eval())
             test_error_list.append(test_error.eval())
-            # print("training classficiation error:", train_error.eval())
-            # print("valid classficiation error:", valid_error.eval())
-            # print("test classficiation error:", test_error.eval())
+
+            if epoch % 10 == 0:
+                print("training loss:", train_loss)
+                print("training classficiation error:", train_error.eval())
+                print("valid classficiation error:", valid_error.eval())
+                print("test classficiation error:", test_error.eval())
 
         print("final training loss:", train_loss_list[-1])
         print("final training classification error:", train_error_list[-1])
         print("final validation classification error:", valid_error_list[-1])
         print("final test classification error:", test_error_list[-1])
+        with open("part_1_1_2.txt", "a") as file:
+            file.write("\n" + strftime("%Y-%m-%d %H:%M:%S", gmtime()) + "\n")
+            file.write("final training loss: " +str(train_loss_list[-1]) + "\n")
+            file.write("final training classification error: " + str(train_error_list[-1]) + "\n")
+            file.write("final validation classification error: " + str(valid_error_list[-1]) + "\n")
+            file.write("final test classification error:" + str(test_error_list[-1]) + "\n")
         plt.subplot(2, 1, 1)
         plt.plot(np.arange(num_epochs), train_loss_list)
         plt.xlabel("epoch #")
