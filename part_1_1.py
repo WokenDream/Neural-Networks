@@ -22,7 +22,7 @@ def build_layer(X, neuron_num = 1000):
     return Sum
 
 
-def compute_2_layer_accuracy(data, one_hot_labels, W1, W2):
+def compute_2_layer_error(data, one_hot_labels, W1, W2):
     X1 = tf.nn.relu(tf.matmul(data, W1))
     preds = tf.nn.softmax(tf.matmul(X1, W2))
     correct_preds = tf.equal(tf.argmax(preds, 1), tf.argmax(one_hot_labels, 1))
@@ -83,6 +83,15 @@ def tune_learning_rate():
 
         with tf.Session() as sess:
             sess.run(init)
+
+            # sample epoch 0
+            train_error = sess.run(loss, feed_dict={
+                X0: train_data[0:batch_size],
+                Y: train_target[0:batch_size]
+            })
+            print("initial training loss:", train_error)
+            train_loss_list.append(train_error)
+
             shuffled_inds = np.arange(num_train)
 
             for epoch in range(num_epochs):
@@ -102,12 +111,35 @@ def tune_learning_rate():
                 if epoch % 10 == 0:
                     print("training loss:", train_error)
 
-        plt.plot(np.arange(num_epochs), train_loss_list)
+        plt.plot(train_loss_list)
     plt.legend(['0.005', '0.001', '0.01'])
     plt.title("SGD training - error vs epoch #")
     plt.xlabel('epoch number')
     plt.ylabel('mean entropy')
     plt.show()
+
+
+def compute_errors(sess, X0, Y, S2, loss, batch_X0, batch_Y, valid_data, valid_target_onehot, test_data, test_target_onehot):
+    train_loss, Output = sess.run([loss, S2], feed_dict={
+        X0: batch_X0,
+        Y: batch_Y
+    })
+
+    with tf.variable_scope("W", reuse=True):
+        W1 = tf.get_variable("W1")
+        W2 = tf.get_variable("W2")
+
+    # compute classficiation errors
+    train_preds = tf.nn.softmax(Output)
+    batch_Y_onehot = tf.one_hot(batch_Y, 10)
+    correct_train_preds = tf.equal(tf.argmax(train_preds, 1), tf.argmax(batch_Y_onehot, 1))
+    train_error = 1 - tf.reduce_mean(tf.cast(correct_train_preds, tf.float32))
+
+    valid_error = compute_2_layer_error(valid_data, valid_target_onehot, W1, W2)
+    test_error = compute_2_layer_error(test_data, test_target_onehot, W1, W2)
+
+    return train_loss, train_error.eval(), valid_error.eval(), test_error.eval()
+
 
 
 def train_no_early_stopping():
@@ -118,7 +150,7 @@ def train_no_early_stopping():
     test_data = tf.cast(test_data, tf.float32)
 
     batch_size = 500
-    num_iterations = 4500
+    num_iterations = 9000
     num_train = train_data.shape[0]
     num_batches = num_train // batch_size
     num_epochs = num_iterations // num_batches
@@ -136,8 +168,25 @@ def train_no_early_stopping():
 
     with tf.Session() as sess:
         sess.run(init)
+
+        # sample epoch 0
+        batch_X0 = train_data[0:batch_size]
+        batch_Y = train_target[0:batch_size]
+        train_loss, train_error, valid_error, test_error = compute_errors(sess, X0, Y, S2, loss, batch_X0, batch_Y,
+                                                                          valid_data, valid_target_onehot,
+                                                                          test_data, test_target_onehot)
+        print("initial loss:", train_loss)
+        train_loss_list.append(train_loss)
+        train_error_list.append(train_error)
+        valid_error_list.append(valid_error)
+        test_error_list.append(test_error)
+
         shuffled_inds = np.arange(num_train)
 
+        prev_valid_error = 100000000
+        prev_test_error = 100000000
+        valid_inc = 0
+        test_inc = 0
         for epoch in range(num_epochs):
 
             np.random.shuffle(shuffled_inds)
@@ -147,33 +196,48 @@ def train_no_early_stopping():
             for j in range(num_batches):
                 batch_X0 = temp_train_data[j * batch_size: (j + 1) * batch_size]
                 batch_Y = temp_train_targets[j * batch_size: (j + 1) * batch_size]
-                _, train_loss, Output = sess.run([optimizer, loss, S2], feed_dict={
+                sess.run(optimizer, feed_dict={
                     X0: batch_X0,
                     Y: batch_Y
                 })
+
+            train_loss, train_error, valid_error, test_error = compute_errors(sess, X0, Y, S2, loss, batch_X0, batch_Y,
+                                                                              valid_data, valid_target_onehot,
+                                                                              test_data, test_target_onehot)
             train_loss_list.append(train_loss)
-            with tf.variable_scope("W", reuse=True):
-                W1 = tf.get_variable("W1")
-                W2 = tf.get_variable("W2")
+            train_error_list.append(train_error)
+            valid_error_list.append(valid_error)
+            test_error_list.append(test_error)
 
-            # compute classficiation errors
-            train_preds = tf.nn.softmax(Output)
-            batch_Y_onehot = tf.one_hot(batch_Y, 10)
-            correct_train_preds = tf.equal(tf.argmax(train_preds, 1), tf.argmax(batch_Y_onehot, 1))
-            train_error = 1 - tf.reduce_mean(tf.cast(correct_train_preds, tf.float32))
+            # check for early stopping points
+            if valid_inc > -1:
+                if valid_error >= prev_valid_error:
+                    valid_inc += 1
+                else:
+                    valid_inc = 0
+                if valid_inc == 5:
+                    valid_inc = -1 if epoch > 100 else 0
+                    with open("part_1_1_3.txt", "a") as file:
+                        file.write("\n" + strftime("%Y-%m-%d %H:%M:%S", gmtime()) + "\n")
+                        file.write("valid early stop pt at epoch: " + str(epoch))
 
-            valid_error = compute_2_layer_accuracy(valid_data, valid_target_onehot, W1, W2)
-            test_error = compute_2_layer_accuracy(test_data, test_target_onehot, W1, W2)
+            if test_inc > -1:
+                if test_error >= prev_test_error:
+                    test_inc += 1
+                else:
+                    test_inc = 0
+                if test_inc == 5:
+                    test_inc = -1 if epoch > 100 else 0
+                    with open("part_1_1_3.txt", "a") as file:
+                        file.write("\n" + strftime("%Y-%m-%d %H:%M:%S", gmtime()) + "\n")
+                        file.write("test early stop pt at epoch: " + str(epoch))
 
-            train_error_list.append(train_error.eval())
-            valid_error_list.append(valid_error.eval())
-            test_error_list.append(test_error.eval())
+            prev_valid_error = valid_error
+            prev_test_error = test_error
 
             if epoch % 10 == 0:
                 print("training loss:", train_loss)
-                print("training classficiation error:", train_error.eval())
-                print("valid classficiation error:", valid_error.eval())
-                print("test classficiation error:", test_error.eval())
+                print("valid classficiation error:", valid_error)
 
         print("final training loss:", train_loss_list[-1])
         print("final training classification error:", train_error_list[-1])
@@ -186,14 +250,14 @@ def train_no_early_stopping():
             file.write("final validation classification error: " + str(valid_error_list[-1]) + "\n")
             file.write("final test classification error:" + str(test_error_list[-1]) + "\n")
         plt.subplot(2, 1, 1)
-        plt.plot(np.arange(num_epochs), train_loss_list)
+        plt.plot(train_loss_list)
         plt.xlabel("epoch #")
         plt.ylabel("entropy loss")
         plt.title("entropy loss vs epoch #")
         plt.subplot(2, 1, 2)
-        plt.plot(np.arange(num_epochs), train_error_list)
-        plt.plot(np.arange(num_epochs), valid_error_list)
-        plt.plot(np.arange(num_epochs), test_error_list)
+        plt.plot(train_error_list)
+        plt.plot(valid_error_list)
+        plt.plot(test_error_list)
         plt.xlabel("epoch #")
         plt.ylabel("classification error")
         plt.title("classification error vs epoch #")
@@ -228,5 +292,5 @@ def load_data():
     return train_data, trainTarget, valid_data, validTarget, test_data, testTarget
 
 if __name__ == "__main__":
-    tune_learning_rate()
-    # train_no_early_stopping()
+    # tune_learning_rate()
+    train_no_early_stopping()

@@ -55,7 +55,7 @@ def train_dropout():
             train_error = 1 - tf.reduce_mean(tf.cast(correct_train_preds, tf.float32))
 
             # compute validation error
-            valid_error = p11.compute_2_layer_accuracy(valid_data, valid_target_onehot, W1, W2)
+            valid_error = p11.compute_2_layer_error(valid_data, valid_target_onehot, W1, W2)
 
             train_error_list.append(train_error.eval())
             valid_error_list.append(valid_error.eval())

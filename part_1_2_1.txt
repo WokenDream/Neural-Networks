@@ -26,3 +26,29 @@
 2018-04-05 00:43:58
 1000final training loss: 0.0558238
 1000final validation classification error: 0.068
+
+2018-04-05 05:27:23
+100final validation classification error: 0.077
+100best validation classification errors: [(138, 0.069999993)]
+
+2018-04-05 05:31:08
+500final validation classification error: 0.065
+500best validation classification errors: [(44, 0.060000002), (133, 0.060000002)]
+
+2018-04-05 05:37:49
+1000final validation classification error: 0.067
+1000best validation classification errors: [(84, 0.059000015), (108, 0.059000015)]
+
+100best validation classification errors: [145, 0.06099999]
+100best validation classification errors: [148, 0.06099999]
+
+2018-04-05 06:22:41
+100final validation classification error: 0.069
+500best validation classification errors: [104, 0.059000015]
+
+2018-04-05 06:26:05
+500final validation classification error: 0.068
+1000best validation classification errors: [108, 0.055999994]
+
+2018-04-05 06:32:20
+1000final validation classification error: 0.067

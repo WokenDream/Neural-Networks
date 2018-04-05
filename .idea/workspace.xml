@@ -4,6 +4,17 @@
     <list default="true" id="897e1d83-f9b8-47b4-80c9-25293033397c" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/part_1_1.py" afterPath="$PROJECT_DIR$/part_1_1.py" />
+      <change beforePath="$PROJECT_DIR$/part_1_1_2.png" afterPath="$PROJECT_DIR$/part_1_1_2.png" />
+      <change beforePath="$PROJECT_DIR$/part_1_1_2.txt" afterPath="$PROJECT_DIR$/part_1_1_2.txt" />
+      <change beforePath="$PROJECT_DIR$/part_1_1_tuning.png" afterPath="$PROJECT_DIR$/part_1_1_tuning.png" />
+      <change beforePath="$PROJECT_DIR$/part_1_2.py" afterPath="$PROJECT_DIR$/part_1_2.py" />
+      <change beforePath="$PROJECT_DIR$/part_1_2_1.txt" afterPath="$PROJECT_DIR$/part_1_2_1.txt" />
+      <change beforePath="$PROJECT_DIR$/part_1_2_1_100.png" afterPath="$PROJECT_DIR$/part_1_2_1_100.png" />
+      <change beforePath="$PROJECT_DIR$/part_1_2_1_1000.png" afterPath="$PROJECT_DIR$/part_1_2_1_1000.png" />
+      <change beforePath="$PROJECT_DIR$/part_1_2_1_500.png" afterPath="$PROJECT_DIR$/part_1_2_1_500.png" />
+      <change beforePath="$PROJECT_DIR$/part_1_2_2.txt" afterPath="$PROJECT_DIR$/part_1_2_2.txt" />
+      <change beforePath="$PROJECT_DIR$/part_1_2_2_valid_train.png" afterPath="$PROJECT_DIR$/part_1_2_2_valid_train.png" />
+      <change beforePath="$PROJECT_DIR$/part_1_3.py" afterPath="$PROJECT_DIR$/part_1_3.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,11 +28,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="part_1_1.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="part_1_1.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/part_1_1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="96" column="34" lean-forward="false" selection-start-line="96" selection-start-column="23" selection-end-line="96" selection-end-column="34" />
+            <state relative-caret-position="147">
+              <caret line="203" column="77" lean-forward="false" selection-start-line="203" selection-start-column="63" selection-end-line="203" selection-end-column="77" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -32,7 +43,7 @@
       <file leaf-file-name="part_1_3.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/part_1_3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="69">
+            <state relative-caret-position="437">
               <caret line="72" column="43" lean-forward="false" selection-start-line="72" selection-start-column="43" selection-end-line="72" selection-end-column="43" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
@@ -41,11 +52,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="part_1_2.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="part_1_2.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/part_1_2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-446">
-              <caret line="160" column="0" lean-forward="true" selection-start-line="160" selection-start-column="0" selection-end-line="160" selection-end-column="0" />
+            <state relative-caret-position="-863">
+              <caret line="222" column="31" lean-forward="false" selection-start-line="222" selection-start-column="31" selection-end-line="222" selection-end-column="31" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -78,10 +89,18 @@
       <find>with open</find>
       <find>show</find>
       <find>print</find>
-      <find>train_loss</find>
       <find>legend</find>
       <find>train_error</find>
+      <find>plt.plot</find>
       <find>savefi</find>
+      <find>valid_prev_error</find>
+      <find>output</find>
+      <find>Output</find>
+      <find>best_models</find>
+      <find>train_loss</find>
+      <find>best</find>
+      <find>compute_errors</find>
+      <find>best_mode</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -90,13 +109,13 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/part_1_2.py" />
         <option value="$PROJECT_DIR$/part_1_3.py" />
         <option value="$PROJECT_DIR$/part_1_1.py" />
+        <option value="$PROJECT_DIR$/part_1_2.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" fullScreen="true">
     <option name="y" value="23" />
     <option name="width" value="1280" />
     <option name="height" value="722" />
@@ -143,7 +162,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.part_1_3">
+  <component name="RunManager" selected="Python.part_1_2">
     <configuration name="part_1_1" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -205,9 +224,9 @@
     </list>
     <recent_temporary>
       <list size="3">
-        <item index="0" class="java.lang.String" itemvalue="Python.part_1_3" />
+        <item index="0" class="java.lang.String" itemvalue="Python.part_1_2" />
         <item index="1" class="java.lang.String" itemvalue="Python.part_1_1" />
-        <item index="2" class="java.lang.String" itemvalue="Python.part_1_2" />
+        <item index="2" class="java.lang.String" itemvalue="Python.part_1_3" />
       </list>
     </recent_temporary>
   </component>
@@ -237,18 +256,18 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1280" height="722" extended-state="0" />
+    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15250199" sideWeight="0.48623854" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32854864" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32695374" sideWeight="0.5059571" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14513557" sideWeight="0.4921875" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2709766" sideWeight="0.4921875" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32854864" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32854864" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33652312" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29023385" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32695374" sideWeight="0.4940429" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32599726" sideWeight="0.4940429" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15" sideWeight="0.51376146" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -264,7 +283,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="2" />
+      <option name="time" value="3" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -442,19 +461,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/part_1_2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-446">
-          <caret line="160" column="0" lean-forward="true" selection-start-line="160" selection-start-column="0" selection-end-line="160" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/part_1_3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
+        <state relative-caret-position="437">
           <caret line="72" column="43" lean-forward="false" selection-start-line="72" selection-start-column="43" selection-end-line="72" selection-end-column="43" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
@@ -464,8 +473,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/part_1_1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="96" column="34" lean-forward="false" selection-start-line="96" selection-start-column="23" selection-end-line="96" selection-end-column="34" />
+        <state relative-caret-position="147">
+          <caret line="203" column="77" lean-forward="false" selection-start-line="203" selection-start-column="63" selection-end-line="203" selection-end-column="77" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/part_1_2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-863">
+          <caret line="222" column="31" lean-forward="false" selection-start-line="222" selection-start-column="31" selection-end-line="222" selection-end-column="31" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>

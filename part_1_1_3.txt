@@ -1,0 +1,15 @@
+
+2018-04-05 04:59:42
+test early stop pt at epoch: 43
+2018-04-05 05:07:30
+valid early stop pt at epoch: 189
+2018-04-05 05:15:24
+valid early stop pt at epoch: 52
+2018-04-05 05:22:12
+valid early stop pt at epoch: 201
+2018-04-05 05:43:54
+valid early stop pt at epoch: 58
+2018-04-05 05:49:51
+valid early stop pt at epoch: 167
+2018-04-05 05:57:47
+test early stop pt at epoch: 299

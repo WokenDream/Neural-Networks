@@ -27,7 +27,8 @@ def tune_num_of_hidden_units():
         init = tf.global_variables_initializer()
 
         valid_error_list = []
-        train_loss_list = []
+        best_models = []
+        best_valid_error = 100000000
 
         with tf.Session() as sess:
             sess.run(init)
@@ -41,7 +42,7 @@ def tune_num_of_hidden_units():
                 for j in range(num_batches):
                     batch_X0 = temp_train_data[j * batch_size: (j + 1) * batch_size]
                     batch_Y = temp_train_targets[j * batch_size: (j + 1) * batch_size]
-                    _, train_loss, Output = sess.run([optimizer, loss, S2], feed_dict={
+                    sess.run(optimizer, feed_dict={
                         X0: batch_X0,
                         Y: batch_Y
                     })
@@ -50,39 +51,44 @@ def tune_num_of_hidden_units():
                     W1 = tf.get_variable("W" + str(p11.layer_num - 2))
                     W2 = tf.get_variable("W" + str(p11.layer_num - 1))
 
-                valid_error = p11.compute_2_layer_accuracy(valid_data, valid_target_onehot, W1, W2)
+                valid_error = p11.compute_2_layer_error(valid_data, valid_target_onehot, W1, W2).eval()
 
-                train_loss_list.append(train_loss)
-                valid_error_list.append(valid_error.eval())
+                # record best validation error
+                if valid_error < best_valid_error:
+                    best_valid_error = valid_error
+                    best_models.clear()
+                    best_models.append([epoch, valid_error, [W1.eval(), W2.eval()]])
+                elif valid_error == best_valid_error:
+                    best_models.append([epoch, valid_error, [W1.eval(), W2.eval()]])
+
+                valid_error_list.append(valid_error)
 
                 if epoch % 10 == 0:
-                    print("training loss:", train_loss)
-                    print("validation error:", valid_error.eval())
+                    print("validation error:", valid_error)
 
-            print("final training loss:", train_loss_list[-1])
             print("final validation classification error:", valid_error_list[-1])
+
+            # save model
+            for best in best_models:
+                with open("part_1_2_1.txt", "a") as file:
+                    file.write(str(hidden_num) + "best validation classification errors: " + str(best[0:2]) + "\n")
+                print("best valid classification errors:", best[:2])
+                np.save(str(hidden_num) + "_best_W1_at" + str(best[0]) + ".npy", best[-1][0])
+                np.save(str(hidden_num) + "_best_W2_at" + str(best[0]) + ".npy", best[-1][1])
 
             with open("part_1_2_1.txt", "a") as file:
                 file.write("\n" + strftime("%Y-%m-%d %H:%M:%S", gmtime()) + "\n")
-                file.write(str(hidden_num) + "final training loss: " + str(train_loss_list[-1]) + "\n")
                 file.write(str(hidden_num) + "final validation classification error: " + str(valid_error_list[-1]) + "\n")
 
-            plt.subplot(2, 1, 1)
-            plt.plot(np.arange(num_epochs), train_loss_list)
-            plt.xlabel("epoch #")
-            plt.ylabel("entropy loss")
-            plt.title("entropy loss vs epoch #")
-            plt.subplot(2, 1, 2)
-            plt.plot(np.arange(num_epochs), valid_error_list)
+            plt.plot(valid_error_list)
             plt.xlabel("epoch #")
             plt.ylabel("validation classification error")
             plt.title("validation classification error vs epoch #")
-            # plt.tight_layout()
             plt.savefig("part_1_2_1_" + str(hidden_num), dpi=400)
             plt.gcf().clear()
-            train_loss_list.clear()
-            valid_error_list.clear()
 
+            # W1_best = np.load("filename")
+            # W2_best = np.load("filename")
             # compute test classification error
             # test_error = p11.compute_accuracy(test_data, tf.one_hot(test_target, 10), W1, W2)
 
@@ -120,7 +126,7 @@ def build_3_layer_NN(hidden_units_num = 500, reg =3e-4, learning_rate = 0.001):
     return X0, Y, S3, loss, optimizer
 
 
-def compute_3_layer_accuracy(data, one_hot_labels, W1, W2, W3):
+def compute_3_layer_error(data, one_hot_labels, W1, W2, W3):
     X1 = tf.nn.relu(tf.matmul(data, W1))
     X2 = tf.nn.relu(tf.matmul(X1, W2))
     preds = tf.nn.softmax(tf.matmul(X2, W3))
@@ -129,7 +135,25 @@ def compute_3_layer_accuracy(data, one_hot_labels, W1, W2, W3):
     return error
 
 
-def tune_num_of_layers():
+def compute_errors(sess, S3, X0, batch_X0, batch_Y, valid_data, valid_target_onehot):
+    with tf.variable_scope("W", reuse=True):
+        W1 = tf.get_variable("W" + str(p11.layer_num - 3))
+        W2 = tf.get_variable("W" + str(p11.layer_num - 2))
+        W3 = tf.get_variable("W" + str(p11.layer_num - 1))
+
+    valid_error = compute_3_layer_error(valid_data, valid_target_onehot, W1, W2, W3).eval()
+    Output = sess.run(S3, feed_dict={
+        X0: batch_X0
+    })
+    train_preds = tf.nn.softmax(Output)
+    batch_Y_onehot = tf.one_hot(batch_Y, 10)
+    correct_train_preds = tf.equal(tf.argmax(train_preds, 1), tf.argmax(batch_Y_onehot, 1))
+    train_error = (1 - tf.reduce_mean(tf.cast(correct_train_preds, tf.float32))).eval()
+
+    return valid_error, train_error
+
+
+def train_3_layer_NN():
     train_data, train_target, valid_data, valid_target, test_data, test_target = p11.load_data()
     valid_data = tf.cast(valid_data, tf.float32)
     valid_target_onehot = tf.one_hot(valid_target, 10)
@@ -154,6 +178,13 @@ def tune_num_of_layers():
         sess.run(init)
         shuffled_inds = np.arange(num_train)
 
+        batch_X0 = train_data[0:batch_size]
+        batch_Y = train_target[0:batch_size]
+
+        valid_error, train_error = compute_errors(sess, S3, X0, batch_X0, batch_Y, valid_data, valid_target_onehot)
+        valid_error_list.append(valid_error)
+        train_error_list.append(train_error)
+
         for epoch in range(num_epochs):
             np.random.shuffle(shuffled_inds)
             temp_train_data = train_data[shuffled_inds]
@@ -162,22 +193,11 @@ def tune_num_of_layers():
             for j in range(num_batches):
                 batch_X0 = temp_train_data[j * batch_size: (j + 1) * batch_size]
                 batch_Y = temp_train_targets[j * batch_size: (j + 1) * batch_size]
-                _, _, Output = sess.run([optimizer, loss, S3], feed_dict={
+                sess.run(optimizer, feed_dict={
                     X0: batch_X0,
                     Y: batch_Y
                 })
-
-            with tf.variable_scope("W", reuse=True):
-                W1 = tf.get_variable("W" + str(p11.layer_num - 3))
-                W2 = tf.get_variable("W" + str(p11.layer_num - 2))
-                W3 = tf.get_variable("W" + str(p11.layer_num - 1))
-
-            valid_error = compute_3_layer_accuracy(valid_data, valid_target_onehot, W1, W2, W3).eval()
-
-            train_preds = tf.nn.softmax(Output)
-            batch_Y_onehot = tf.one_hot(batch_Y, 10)
-            correct_train_preds = tf.equal(tf.argmax(train_preds, 1), tf.argmax(batch_Y_onehot, 1))
-            train_error = (1 - tf.reduce_mean(tf.cast(correct_train_preds, tf.float32))).eval()
+            valid_error, train_error = compute_errors(sess, S3, X0, batch_X0, batch_Y, valid_data, valid_target_onehot)
 
             valid_error_list.append(valid_error)
             train_error_list.append(train_error)
@@ -190,8 +210,8 @@ def tune_num_of_layers():
             file.write("final training classification error: " + str(train_error_list[-1]) + "\n")
             file.write("final validation classification error: " + str(valid_error_list[-1]) + "\n")
 
-        plt.plot(np.arange(num_epochs), train_error_list)
-        plt.plot(np.arange(num_epochs), valid_error_list)
+        plt.plot(train_error_list)
+        plt.plot(valid_error_list)
         plt.legend(['training', 'validation'])
         plt.title("classification error vs epoch #")
         plt.xlabel('epoch number')
@@ -200,6 +220,7 @@ def tune_num_of_layers():
 
 
 def compare_with_2_layer():
+    # TODO: add epoch 0 to plot
     train_data, train_target, valid_data, valid_target, test_data, test_target = p11.load_data()
     test_data = tf.cast(test_data, tf.float32)
     test_target_onehot = tf.one_hot(test_target, 10)
@@ -246,8 +267,8 @@ def compare_with_2_layer():
                 W3_3 = tf.get_variable("W" + str(p11.layer_num - 3))
                 W1_2 = tf.get_variable("W" + str(p11.layer_num - 2))
                 W2_2 = tf.get_variable("W" + str(p11.layer_num - 1))
-            test_error_3 = compute_3_layer_accuracy(test_data, test_target_onehot, W1_3, W2_3, W3_3).eval()
-            test_error_2 = p11.compute_2_layer_accuracy(test_data, test_target_onehot, W1_2, W2_2).eval()
+            test_error_3 = compute_3_layer_error(test_data, test_target_onehot, W1_3, W2_3, W3_3).eval()
+            test_error_2 = p11.compute_2_layer_error(test_data, test_target_onehot, W1_2, W2_2).eval()
 
             if epoch % 10 == 0:
                 print("3 layer test error:", test_error_3)
@@ -277,6 +298,6 @@ def compare_with_2_layer():
 
 
 if __name__ == "__main__":
-    # tune_num_of_hidden_units()
-    # tune_num_of_layers()
-    compare_with_2_layer()
+    tune_num_of_hidden_units()
+    # train_3_layer_NN()
+    # compare_with_2_layer()

@@ -10,3 +10,27 @@ final training loss: 0.057958
 final training classification error: 0.00199997
 final validation classification error: 0.067
 final test classification error:0.0774596
+
+2018-04-05 04:31:45
+final training loss: 0.0531611
+final training classification error: 0.0
+final validation classification error: 0.062
+final test classification error:0.0781938
+
+2018-04-05 05:08:41
+final training loss: 0.0510622
+final training classification error: 0.00199997
+final validation classification error: 0.07
+final test classification error:0.0800294
+
+2018-04-05 05:22:36
+final training loss: 0.0512655
+final training classification error: 0.00199997
+final validation classification error: 0.063
+final test classification error:0.0785609
+
+2018-04-05 05:57:47
+final training loss: 0.0505504
+final training classification error: 0.0
+final validation classification error: 0.065
+final test classification error:0.0807636
