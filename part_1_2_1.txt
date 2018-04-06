@@ -51,3 +51,6 @@
 2018-04-05 06:32:20
 1000best validation classification errors: [108, 0.055999994]
 1000final validation classification error: 0.067
+test classification error: 0.0748898
+test classification error: 0.0748898
+test classification error: 0.0748898

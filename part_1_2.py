@@ -95,6 +95,21 @@ def tune_num_of_hidden_units():
             # test_error = p11.compute_accuracy(test_data, tf.one_hot(test_target, 10), W1, W2)
 
 
+def report_test_classification_error():
+    train_data, train_target, valid_data, valid_target, test_data, test_target = p11.load_data()
+    W1_best = np.load("1000_best_W1_at108.npy")
+    W2_best = np.load("1000_best_W2_at108.npy")
+    test_error = p11.compute_2_layer_error(tf.cast(test_data, tf.float32), tf.one_hot(test_target, 10), W1_best, W2_best)
+    with tf.Session() as sess:
+        test_error = test_error.eval()
+        print("test error:", test_error)
+
+        with open("part_1_2_1.txt", "a") as file:
+            file.write("test classification error: " + str(test_error) + "\n")
+
+
+
+
 def build_3_layer_NN(hidden_units_num = 500, reg =3e-4, learning_rate = 0.001):
     """
     :param hidden_units_num: # of neurons to be used in each hidden leayer
@@ -326,5 +341,6 @@ def compare_NNs():
 
 if __name__ == "__main__":
     # tune_num_of_hidden_units()
+    report_test_classification_error()
     # train_3_layer_NN()
-    compare_NNs()
+    # compare_NNs()

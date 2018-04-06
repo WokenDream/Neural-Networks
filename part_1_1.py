@@ -172,7 +172,7 @@ def train_no_early_stopping():
     test_data = tf.cast(test_data, tf.float32)
 
     batch_size = 500
-    num_iterations = 6300
+    num_iterations = 4500
     num_train = train_data.shape[0]
     num_batches = num_train // batch_size
     num_epochs = num_iterations // num_batches
