@@ -341,6 +341,6 @@ def compare_NNs():
 
 if __name__ == "__main__":
     # tune_num_of_hidden_units()
-    report_test_classification_error()
+    # report_test_classification_error()
     # train_3_layer_NN()
-    # compare_NNs()
+    compare_NNs()
